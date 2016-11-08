@@ -1,0 +1,54 @@
+<div class="row main-canvas">
+  <div class="small-10 small-centered columns">
+		<h3>PROJECTS</h3>
+		<div class="row main-box" >
+			<div class="filter-box">
+				<div class="search-box">
+					<search-box (update)="term = $event"></search-box>
+					<i class="fa fa-search search-icon" title="Search"></i>
+				</div>
+				<div class="sort-box">
+					<!-- <i class="fa sort-icon {{sortStr=='flag' ? 'sort-selected fa-check-square': 'fa-check-square-o'}} " (click)="sortBy('flag')" title="Completed"></i> -->
+					<i class="fa fa-sort-alpha-desc sort-icon {{sortStr=='-name' ? 'sort-selected': ''}} " (click)="sortBy('-name')" title="Decending"></i>
+					<i class="fa fa-sort-alpha-asc sort-icon {{sortStr=='name' ? 'sort-selected': ''}} " (click)="sortBy('name')" title="Ascending"></i>
+				</div>
+			</div>
+			<div class="small-12 columns list-box">
+				<div class="row list-item" *ngFor="let project of projects | search: {name: term} | orderBy: [sortStr]" (click)="openFeatures(project)" (mouseover)="project._show_buttons=true" (mouseout)="project._show_buttons=false">
+					<div class="small-7 medium-9 large-10 columns">
+						<div *ngIf="!editedProject || editedProject.id != project.id">{{project.name}}</div>
+						<input *ngIf="editedProject && editedProject.id == project.id" (click)="$event.stopPropagation()" [(ngModel)]="editedProject.name" placeholder="project name" class="input-edit"/>
+					</div>
+			  		<div class="small-5 medium-3 large-2 columns button-container" >
+				  		<div [hidden]="!is_touch_screen && !project._show_buttons" class="button-box">
+				  			<a *ngIf="!editedProject || editedProject.id != project.id" href="#" class="button tiny button-edit-save" (click)="editProject(project, $event)">Edit</a>
+				  			<a *ngIf="editedProject && editedProject.id == project.id" href="#" class="button tiny success button-edit-save" (click)="saveProject($event)">Save</a>
+				  			<a href="#" class="button tiny alert button-remove" (click)="removeProject(project, $event)">Remove</a>
+				  			
+				  		</div>
+			  		</div>
+			  	</div>
+				
+			</div>
+			<div class="add-box">
+				<div class="row">
+					<div class="small-10 medium-10 large-10 columns add-form">
+						<span class="add-space"> &nbsp; </span>
+						<input *ngIf="showAddForm" [(ngModel)]="add_field" (focus)="add_field_focus=true" (blur)="add_field_focus=false" placeholder="Add Project" class="add-field"/>
+
+					</div>
+					<div class="small-2 medium-2 large-2 columns add-button-group">
+							<span class="add-icon-box" *ngIf="!add_field && !add_field_focus">
+								<i class="fa fa-plus-circle" (click)="showAddForm=true;" title="Add Project"></i>
+							</span>
+							<span *ngIf="add_field" href="#" class="button tiny success button-add" (click)="addProject($event)">Add</span>
+					</div>
+				</div>
+			</div>
+		  
+		</div>
+	</div>
+<div>
+
+<!-- 
+<router-outlet></router-outlet> -->

@@ -1,0 +1,69 @@
+<div class="row main-canvas">
+  <div class="small-10 small-centered columns">
+		<div >
+			<h3 *ngIf="currentFeature">{{currentFeature.name}}</h3>
+			<h5>To Do List</h5>
+			<div class="back-container">
+				<a routerLink="/features/{{currentProject.id}}" routerLinkActive="active">
+					<i class="fa fa-arrow-left"></i>
+					<span>Back</span>
+				</a>
+			</div>
+		</div>
+		<div class="row main-box" >
+			<div class="filter-box">
+				<div class="search-box">
+					<search-box (update)="term = $event"></search-box>
+					<i class="fa fa-search search-icon" title="Search"></i>
+				</div>
+				<div class="sort-box">
+					<i class="fa sort-icon {{sortStr=='-flag' ? 'sort-selected fa-check-square': 'fa-check-square-o'}} " (click)="sortBy('-flag')" title="Completed"></i>
+					<i class="fa fa-sort-alpha-desc sort-icon {{sortStr=='-name' ? 'sort-selected': ''}} " (click)="sortBy('-name')" title="Decending"></i>
+					<i class="fa fa-sort-alpha-asc sort-icon {{sortStr=='name' ? 'sort-selected': ''}} " (click)="sortBy('name')" title="Ascending"></i>
+				</div>
+			</div>
+			<div class="small-12 columns list-box">
+
+
+				<div class="row list-item" *ngFor="let todo of todos | search: {name: term} | orderBy: [sortStr]" (click)="toggleComplete(todo)" (mouseover)="todo._show_buttons=true" (mouseout)="todo._show_buttons=false">
+					<div class="small-7 medium-9 large-10 columns">
+						<div class="row">
+							<div class="small-1 medium-1 large-1 columns">
+								<i *ngIf="todo.flag" class="fa fa-check todo-check-icon" title="Completed"></i>
+							</div>
+							<div class="small-10 medium-10 large-10 columns">
+								<div *ngIf="!editedTodo || editedTodo.id != todo.id" class="{{todo.flag? 'todo-check' : ''}}">{{todo.name}}</div>
+								<input *ngIf="editedTodo && editedTodo.id == todo.id" (click)="$event.stopPropagation()" [(ngModel)]="editedTodo.name" placeholder="to do name" class="input-edit"/>
+							</div>
+						</div>
+					</div>
+			  	<div class="small-5 medium-3 large-2 columns button-container">
+			  		<div [hidden]="!is_touch_screen && !todo._show_buttons" class="button-box">
+			  			<div *ngIf="!editedTodo || editedTodo.id != todo.id" href="#" class="button tiny button-edit-save" (click)="editTodo(todo, $event)">Edit</div>
+			  			<div *ngIf="editedTodo && editedTodo.id == todo.id" href="#" class="button tiny success button-edit-save" (click)="saveTodo($event)">Save</div>
+			  			<div href="#" class="button tiny alert button-remove" (click)="removeTodo(todo, $event)">Remove</div>
+			  			
+			  		</div>
+			  	</div>
+			  </div>
+			</div>
+
+		  	<div class="add-box">
+				<div class="row">
+					<div class="small-10 medium-10 large-10 columns add-form">
+						<span class="add-space"> &nbsp; </span>
+						<input *ngIf="showAddForm" [(ngModel)]="add_field" (focus)="add_field_focus=true" (blur)="add_field_focus=false" placeholder="Add Feature" class="add-field"/>
+
+					</div>
+					<div class="small-2 medium-2 large-2 columns add-button-group">
+							<span class="add-icon-box" *ngIf="!add_field && !add_field_focus">
+								<i class="fa fa-plus-circle" (click)="showAddForm=true;" title="Add Feature"></i>
+							</span>
+							<span *ngIf="add_field" href="#" class="button tiny success button-add" (click)="addTodo($event)">Add</span>
+					</div>
+				</div>
+			</div>
+		  
+		</div>
+	</div>
+<div>
